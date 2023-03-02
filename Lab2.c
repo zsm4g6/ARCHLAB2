@@ -20,9 +20,9 @@ void parseRemainder(FILE* fp,char* inst,int* reg2,int* reg3,int* imm){
     char temp[7];
     int count=1;
     int j=11;
-    int neg=0;
+    int neg,count2=0;
     int i=0;
-    *reg3=0;
+    *reg3=0,*imm=0;
     fscanf(fp,"%s",temp);
     if(strcmp(inst,"add")==0){
         if (temp[3]=='\0'){
@@ -70,7 +70,7 @@ void parseRemainder(FILE* fp,char* inst,int* reg2,int* reg3,int* imm){
             i++;
         }
         if(neg==-1){
-            *reg3*=neg;
+            *imm*=neg;
         }
     }
     if(strcmp(inst,"bge")==0){
@@ -114,11 +114,13 @@ void parseRemainder(FILE* fp,char* inst,int* reg2,int* reg3,int* imm){
     }
     if(strcmp(inst,"lw")==0){
         while(temp[i]!='('){
+            
             if((int)temp[i]==45){
                 neg=-1;
             }
             else{
                 j=(int)temp[i]-48;
+               
                 if((i+neg)>0){
                     *imm*=10;
                 }
@@ -126,16 +128,19 @@ void parseRemainder(FILE* fp,char* inst,int* reg2,int* reg3,int* imm){
             }
             i++;
         }
+      
         if(neg==-1){
             *imm*=neg;
         }
-        if (temp[i+3]=='\0'){
-            *reg2=(int)temp[i+1]-48;
-        }
-        else{
-            *reg2=(int)temp[i+1]-48;
-            *reg2*=10;
-            *reg2+=(int)temp[i+2]-48;
+        while(temp[i]!=')'){
+            if((int)temp[i]>47&& (int)temp[i]<58){
+                *reg2=(int)temp[i+1]-48;
+                count2++;
+                if(count>1){
+                    *reg2*=10;
+                }
+            }
+            i++;
         }
 
     }
@@ -153,7 +158,7 @@ int main(){
     
     parseFromFile(fp,output,reg1x);
     parseRemainder(fp,output,reg2x,reg3x,immx);
-    printf("%s %d %d %d\n",output,reg1,reg2,reg3);
+    printf("%s %d %d %d %d\n",output,reg1,reg2,reg3,imm);
     return 0;
 }
 
