@@ -18,11 +18,11 @@ void parseFromFile(FILE* fp,char* inst,int* reg1){
 
 void parseRemainder(FILE* fp,char* inst,int* reg2,int* reg3,int* imm){
     char temp[7];
-    int count=1;
+    int count,count2=1;
     int j=11;
-    int neg,count2=0;
+    int neg=0;
     int i=0;
-    *reg3=0,*imm=0;
+    *reg2=0,*reg3=0,*imm=0;
     fscanf(fp,"%s",temp);
     if(strcmp(inst,"add")==0){
         if (temp[3]=='\0'){
@@ -132,13 +132,17 @@ void parseRemainder(FILE* fp,char* inst,int* reg2,int* reg3,int* imm){
         if(neg==-1){
             *imm*=neg;
         }
+    
         while(temp[i]!=')'){
+            
             if((int)temp[i]>47&& (int)temp[i]<58){
-                *reg2=(int)temp[i+1]-48;
-                count2++;
-                if(count>1){
+              
+                
+                if(count2>1){
                     *reg2*=10;
                 }
+                count2++;
+                *reg2+=(int)temp[i]-48;
             }
             i++;
         }
