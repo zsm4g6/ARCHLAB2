@@ -75,6 +75,17 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
             }
             
             fscanf(fp,"%s",temp);
+            printf("%s\n",temp);
+            while(temp[i+1]!='\0'){
+                if(count>1){
+                    printf("test\n");
+                    *reg3*=10;
+                }
+                *reg3+=(int)temp[i+1]-48;
+                count++;
+                i++;
+            }
+            /*
             if (temp[3]=='\0'){
                 *reg3=(int)temp[1]-48;
             }
@@ -83,6 +94,7 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
                 *reg3*=10;
                 *reg3+=(int)temp[2]-48;
             }
+            */
         }
         if(strcmp(inst,"addi")==0){
             if (temp[3]=='\0'){
@@ -196,8 +208,7 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
         if(inst[0]=='j'){
             for(int i=0;i<branchNum;i++){
                 if(strcmp(inst2,branches[i].content)==0){
-                    //printf("%c\n",branches[i].location);
-                    *imm=branches[i].location-(int)inst[1]-48;
+                    *imm=branches[i].location-(int)inst[1]+48;
                 }
             }
         }
@@ -211,11 +222,10 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
 int main(){
     FILE* fp;
     fp=fopen("test.txt","r");
-    //parseInstructionFromFile(fp);
     char output[6],output2[6];
     int reg1=0,reg2=0,reg3=0,imm=0;
     int *reg1x=&reg1,*reg2x=&reg2,*reg3x=&reg3,*immx=&imm;
-    for(int i=1;i<4;i++){
+    for(int i=1;i<5;i++){
         parseFromFile(fp,output,output2,reg1x);
         //printf("%s\n",output2);
         parseRemainder(fp,output,output2,reg2x,reg3x,immx);
