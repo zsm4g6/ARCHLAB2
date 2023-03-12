@@ -51,6 +51,9 @@ void parseFromFile(FILE* fp,char* inst,char* inst2,int* reg1){
         *reg1*=10;
         *reg1+=(int)temp[2]-48;
     }
+    if(strcmp(inst,"bge")==0){
+    	inst2[1]=programCounter+'0';
+    }
     programCounter++;
 
 }
@@ -75,8 +78,7 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
             }
             
             fscanf(fp,"%s",temp);
-            printf("%s\n",temp);
-            while(temp[i+1]!='\0'){
+	    while(temp[i+1]!='\0'){
                 if(count>1){
                     printf("test\n");
                     *reg3*=10;
@@ -85,17 +87,7 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
                 count++;
                 i++;
             }
-            /*
-            if (temp[3]=='\0'){
-                *reg3=(int)temp[1]-48;
-            }
-            else{
-                *reg3=(int)temp[1]-48;
-                *reg3*=10;
-                *reg3+=(int)temp[2]-48;
-            }
-            */
-        }
+	}    
         if(strcmp(inst,"addi")==0){
             if (temp[3]=='\0'){
                 *reg2=(int)temp[1]-48;
@@ -115,9 +107,9 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
                 else{
                     j=(int)temp[i]-48;
                     if((i+neg)>0){
-                        *reg3*=10;
+                        *imm*=10;
                     }
-                    *reg3+=j;
+                    *imm+=j;
                 }
                 i++;
             }
@@ -134,9 +126,10 @@ void parseRemainder(FILE* fp,char* inst,char* inst2,int* reg2,int* reg3,int* imm
                 *reg2*=10;
                 *reg2+=(int)temp[2]-48;
             }
+	    fscanf(fp,"%s",temp);
             for(int i=0;i<branchNum;i++){
-                if(strcmp(inst2,branches[i].content)==0){
-                    *imm=branches[i].location-(int)inst[1]-48;
+                if(strcmp(temp,branches[i].content)==0){
+                    *imm=branches[i].location-(int)inst2[1]+48;
                 }
             }
         }
